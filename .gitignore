@@ -1,0 +1,44 @@
+# ==========================================
+# WatchZork Detection Kernel (WZDK) gitignore
+# ==========================================
+.github
+
+# 1. Visual Studio / MSBuild IDE Files
+.vs/
+*.user
+*.suo
+*.db
+*.sln.docstates
+
+# 2. MSVC / WDK Build Output Directories
+x64/
+x86/
+ARM64/
+Debug/
+Release/
+
+# 3. Compiled Binaries & Symbols
+*.sys
+*.pdb
+*.obj
+*.lib
+*.exp
+*.map
+*.res
+*.ilk
+
+# 4. Driver Specific Generation
+*.cer
+*.pfx
+*.sdv
+*.dvl.xml
+*.tlog
+*.log
+*.recipe
+*.FileListAbsolute.txt
+sdv/
+sdv.temp/
+
+# 5. OS Generated Files
+desktop.ini
+Thumbs.db

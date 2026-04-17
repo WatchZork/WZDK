@@ -1,0 +1,3 @@
+[submodule "SharedABI"]
+	path = SharedABI
+	url = https://github.com/WatchZork/WZD-ABI.git
