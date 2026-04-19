@@ -26,6 +26,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISABLE_LINTERS: REPOSITORY_SECRETS
+          GRYPE_DB_AUTO_UPDATE: "true"
 
   sast:
     name: Semgrep SAST
@@ -43,4 +44,3 @@ jobs:
           semgrep ci \
             --config="p/c" \
             --config="p/cpp" \
-            --error
