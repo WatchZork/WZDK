@@ -288,21 +288,31 @@ VOID WZDKS_ProcessNotifyCallbackEx(
             wcscpy_s(EventPayload.CommandLine, WZD_MAX_CMD_LENGTH, L"<EMPTY/NULL>");
         }
 
-        /* [COMMENTED OUT] Old debugging output:
-        // Optional: Keep a small log for debugging
+        // ---------------------------------------------------------
+        // FULL KERNEL FORENSIC DUMP (CREATE)
+        // ---------------------------------------------------------
         DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-            "[WZDKS] Event Dispatched to Ring Buffer. PID: %p:%u\n", EventPayload.ProcessId, EventPayload.ProcessId);
-
-        // Memory-Safe Logging Output (BSOD Prevention for NULL Pointers)
-        if (imageName != NULL && cmdLine != NULL) {
-            DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL, ... )
-        } ...
-        */
-
-        // Unified Hex:Dec Log BEFORE writing to Ring Buffer
-        DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-                   "[WZDKS] [+] CREATE DISPATCH | PID: 0x%04lX:%lu\n",
-                   EventPayload.ProcessId, EventPayload.ProcessId);
+            "\n=======================================================\n"
+            "[WZDKS] [+] KERNEL PROCESS CREATED\n"
+            "  Target PID    : %lu (0x%04X)\n"
+            "  Parent PID    : %lu (0x%04X)\n"
+            "  Creator PID   : %lu (0x%04X)\n"
+            "  Creator TID   : %lu (0x%04X)\n"
+            "  Session ID    : %lu\n"
+            "  Architecture  : %s\n"
+            "  SID Length    : %lu Bytes\n"
+            "  Image Path    : %S\n"
+            "  Command Line  : %S\n"
+            "=======================================================\n",
+            EventPayload.ProcessId, EventPayload.ProcessId,
+            EventPayload.ParentProcessId, EventPayload.ParentProcessId,
+            EventPayload.TrueCreatorPid, EventPayload.TrueCreatorPid,
+            EventPayload.TrueCreatorTid, EventPayload.TrueCreatorTid,
+            EventPayload.SessionId,
+            EventPayload.Is32Bit ? "x86 (WoW64)" : "x64 (Native)",
+            EventPayload.SidLength,
+            EventPayload.ImageFileName,
+            EventPayload.CommandLine);
 
         // 4. Dispatch to Lock-Free Ring Buffer
         WZDK_WriteEventToRingBuffer(&EventPayload);
@@ -346,21 +356,24 @@ VOID WZDKS_ProcessNotifyCallbackEx(
             }
         }
 
-        // Unified Hex:Dec Log BEFORE writing to Ring Buffer
+        // ---------------------------------------------------------
+        // FULL KERNEL FORENSIC DUMP (TERMINATE)
+        // ---------------------------------------------------------
         DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-                   "[WZDKS] [-] TERMINATE DISPATCH | PID: 0x%04lX:%lu\n",
-                   EventPayload.ProcessId, EventPayload.ProcessId);
-        // [NEW] THE SANITY CHECK PROBE
-        DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-                   "[WZDKS] SANITY CHECK | PID: 0x%04lX | SidLength: %lu\n",
-                   EventPayload.ProcessId, EventPayload.SidLength);
-        WZDK_WriteEventToRingBuffer(&EventPayload);
+            "\n=======================================================\n"
+            "[WZDKS] [-] KERNEL PROCESS TERMINATED\n"
+            "  Target PID    : %lu (0x%04X)\n"
+            "  Session ID    : %lu\n"
+            "  SID Length    : %lu Bytes\n"
+            "  Image Path    : %S\n"
+            "=======================================================\n",
+            EventPayload.ProcessId, EventPayload.ProcessId,
+            EventPayload.SessionId,
+            EventPayload.SidLength,
+            EventPayload.ImageFileName);
 
-        /* [COMMENTED OUT] Old debugging output:
-        DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-            "[WZDKS] [-] TERMINATED | PID: %p -> Dispatched to Ring Buffer\n",
-            ProcessId);
-        */
+        // 4. Dispatch to Lock-Free Ring Buffer
+        WZDK_WriteEventToRingBuffer(&EventPayload); 
     }
 }
 
