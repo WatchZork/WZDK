@@ -1,7 +1,8 @@
 # ==========================================
 # WatchZork Detection Kernel (WZDK) gitignore
 # ==========================================
-.github
+copilot-instructions.md
+
 
 # 1. Visual Studio / MSBuild IDE Files
 .vs/

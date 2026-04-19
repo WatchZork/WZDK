@@ -1,6 +1,14 @@
 version: 2
+registries:
+  github-watchzork:
+    type: git
+    url: https://github.com
+    username: 0xSA7
+    password: ${{ secrets.DEPENDABOT_PAT }}
 updates:
   - package-ecosystem: "gitsubmodule"
     directory: "/"
+    registries:
+      - github-watchzork
     schedule:
       interval: "daily"
