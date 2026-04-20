@@ -26,12 +26,19 @@ jobs:
       - name: Run MegaLinter
         uses: oxsecurity/megalinter/flavors/c_cpp@v7
         env:
-          VALIDATE_ALL_CODEBASE: false
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ENABLE_LINTERS: C_CPP_CLANG_FORMAT,C_CPP_CPPCHECK,C_CPP_CPPLINT
-          APPLY_FIXES: none
-          GIT_AUTHOR_NAME: "WatchZork Security Bot"
-          GIT_AUTHOR_EMAIL: "devsecops@watchzork.local"
+            VALIDATE_ALL_CODEBASE: false
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            ENABLE_LINTERS: C_CPP_CLANG_FORMAT,C_CPP_CPPCHECK,C_CPP_CPPLINT
+            APPLY_FIXES: none
+            SARIF_REPORTER: true 
+            GIT_AUTHOR_NAME: "WatchZork Security Bot"
+            GIT_AUTHOR_EMAIL: "devsecops@watchzork.local"
+            
+      - name: Upload MegaLinter SARIF
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: megalinter-reports/megalinter-report.sarif
 
   sast:
     name: Semgrep SAST
