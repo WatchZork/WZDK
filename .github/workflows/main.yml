@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:    
 
 permissions:
   contents: read
@@ -60,4 +61,3 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: semgrep.sarif   
-          
