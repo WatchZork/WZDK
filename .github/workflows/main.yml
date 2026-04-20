@@ -33,10 +33,10 @@ jobs:
             SARIF_REPORTER: true 
             GIT_AUTHOR_NAME: "WatchZork Security Bot"
             GIT_AUTHOR_EMAIL: "devsecops@watchzork.local"
-            
       - name: Upload MegaLinter SARIF
         uses: github/codeql-action/upload-sarif@v4
         if: always()
+        continue-on-error: true
         with:
           sarif_file: megalinter-reports/megalinter-report.sarif
 
